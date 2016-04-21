@@ -1,0 +1,73 @@
+{# define translation domain for the component #}
+{% trans_default_domain ownTransDomain|default('collection') %}
+
+{# Globals variables #}
+{% set formName = form.vars.name %}
+{% set listId = 'js-' ~ formName %}
+
+{% import _self as functions %}
+
+{% block componentContent %}
+    <div class="js-collection">
+        {% block table %}
+            {{ form_errors(form) }}
+            <table class="collection">
+                <thead>
+                <tr>
+                    {% block columnsTitles %}
+                        {% for field in form.vars.prototype %}
+                            <th>{{ form_label(field) }}</th>
+                        {% endfor %}
+                    {% endblock %}
+                    <th class="w5">{# header for remove line button #}</th>
+                </tr>
+                </thead>
+                {% set prototype %}
+                    {% block prototype %}
+                        <tr class='js-{{ formName }}__name__'>
+                            {% for field in form.vars.prototype %}
+                                <td>{{ form_errors(field)}} {{ form_widget(field)|e }}</td>
+                            {% endfor %}
+                            <td>{{ functions.delete_button('js-collection-remove', '.js-' ~ formName ~ '__name__')|e }}</td>
+                        </tr>
+                    {% endblock %}
+                {% endset %}
+                <tbody id="{{ listId }}" data-prototype="{{ prototype }}">
+                    {% for line in form %}
+                        {% block form %}
+                            <tr class='js-{{ formName }}__name__'>
+                                {% for field in line.vars.prototype %}
+                                    <td>{{ form_errors(field)}} {{ form_widget(field)|e }}</td>
+                                {% endfor %}
+                                <td>{{ functions.delete_button('js-collection-remove', '.js-' ~ formName ~ '__name__')|e }}</td>
+                            </tr>
+                        {% endblock %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endblock %}
+            <div class="line">
+                <div class="col">
+                </div>
+                <div class="col text-right">
+                    {% block buttons %}
+                        {# May add some buttons #}
+                        {% block buttonAdd %}
+                            <button type="button" class="js-collection-add btn btn-success btn-sm" data-href="#{{ listId }}">
+                                {% block buttonAddLabel %}
+                                    {% trans %}collection.add{% endtrans %}
+                                {% endblock %}
+                            </button>
+                        {% endblock %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{# macro delete button #}
+{% macro delete_button(class, href) %}
+    <button class="{{ class }} btn btn-link" data-href="{{ href }}">
+        <i class="glyphicon glyphicon-trash text-lightgrey"></i>
+    </button>
+{% endmacro %}
