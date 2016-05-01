@@ -36,10 +36,10 @@
                     {% for line in form %}
                         {% block form %}
                             <tr class='js-{{ formName }}__name__'>
-                                {% for field in line.vars.prototype %}
-                                    <td>{{ form_errors(field)}} {{ form_widget(field)|e }}</td>
+                                {% for field in line %}
+                                    <td>{{ form_errors(field)}} {{ form_widget(field) }}</td>
                                 {% endfor %}
-                                <td>{{ functions.delete_button('js-collection-remove', '.js-' ~ formName ~ '__name__')|e }}</td>
+                                <td>{{ functions.delete_button('js-collection-remove', '.js-' ~ formName ~ '__name__') }}</td>
                             </tr>
                         {% endblock %}
                     {% endfor %}
